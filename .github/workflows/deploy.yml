@@ -33,7 +33,7 @@ jobs:
             registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
             registry-username: ${{ secrets.REGISTRY_USERNAME }}
             registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-            environment-variables: PORT=80
+            environment-variables: PORT=443
             secure-environment-variables: GREETING=${{ secrets.GREETING }}
             name: aci-nest
             location: 'west us'

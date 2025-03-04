@@ -24,17 +24,25 @@ jobs:
             docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/nestapp:${{ github.sha }}
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nestapp:${{ github.sha }}
 
-        - name: 'Deploy to Azure Container Instances'
-          uses: 'azure/aci-deploy@v1'
-          with:
-            resource-group: ${{ secrets.RESOURCE_GROUP }}
+        # - name: 'Deploy to Azure Container Instances'
+          # uses: 'azure/aci-deploy@v1'
+          # with:
+            # resource-group: ${{ secrets.RESOURCE_GROUP }}
             # dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
-            dns-name-label: cybergateapi
-            image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/nestapp:${{ github.sha }}
-            registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-            registry-username: ${{ secrets.REGISTRY_USERNAME }}
-            registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-            environment-variables: PORT=443
-            secure-environment-variables: GREETING=${{ secrets.GREETING }}
-            name: aci-nest
-            location: 'west us'
+            # dns-name-label: cybergateapi
+            # image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/nestapp:${{ github.sha }}
+            # registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+            # registry-username: ${{ secrets.REGISTRY_USERNAME }}
+            # registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+            # environment-variables: PORT=443
+            # secure-environment-variables: GREETING=${{ secrets.GREETING }}
+            # name: aci-nest
+            # location: 'west us'
+        - name: Build and deploy Container App
+          uses: azure/container-apps-deploy-action@v1
+          with:
+            acrName: ${{ secrets.ACR_NAME }}
+            containerAppName: ${{ secrets.CONTAINER_APP_NAME }}
+            resourceGroup: ${{ secrets.RESOURCE_GROUP }}
+            imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/nestapp:${{ github.sha }}
+            environmentVariables: PORT=443 secretref:GREETING=${{ secrets.GREETING }}
